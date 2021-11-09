@@ -7,10 +7,8 @@
 <title>Error</title>
 </head>
 <body>
-<centre>
 <h1> ERROR </h1>
-<h2> <%=exception.getMessage() %>> </h2>>
- </centre>	
+<h2> <%=exception.getMessage() %>> </h2>
 
 </body>
 </html>

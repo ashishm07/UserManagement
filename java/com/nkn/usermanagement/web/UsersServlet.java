@@ -1,90 +1,139 @@
 package com.nkn.usermanagement.web;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
-//import javax.servlet.RequestDispatcher;
-//import javax.servlet.ServletConfig;
-//import javax.servlet.ServletException;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 
 import com.nkn.usermanagement.bean.User;
-import com.nkn.usermanagement.dao.*;
+import com.nkn.usermanagement.dao.UserDao;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class UsersServlet
  */
 public class UsersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UsersServlet() {
-        super();
-    }
 
-	/**
-	 * @see Servlet#init(ServletConfig)
-	 */
-	public void init() throws ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("test");
+
+//		PrintWriter out = response.getWriter();
+//		String name = request.getParameter("name");
+//		String password = request.getParameter("password");
+//
+//		if (validateUser(request, response)) {
+//
+//			HttpSession session = request.getSession();
+//			session.putValue("uname", name);
+//
+//			response.sendRedirect("user-form.jsp");
+//			out.print(name + " does exist");
+//		}
+//
+//		else {
+//
+//			out.print(name + " does not exist");
+//		}
+//
+//		User u1 = new User(name, password);
+//		HttpSession session = request.getSession();
+//		session.setAttribute("User", u1);
+		doGet(request, response);
 	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// response.setContentType("text/html");
+
+		PrintWriter out = response.getWriter();
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+
+		request.getParameter("password");
 	
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		
-				doGet(request, response);
-	}
+		if (request.getParameter("Login") != null) {
+			// insertUser(request, response);
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//response.setContentType("text/html");
+		if (validateUser(request, response)) {
+//      		HttpSession session = request.getSession();
+//				session.setAttribute("uname", name);
+	
+				Cookie cookie = new Cookie ("uname", name + "");
+				Cookie cookiepass = new Cookie ("upass", password + "");
+
+				response.addCookie(cookie);
+				response.addCookie(cookiepass);
+
+				
+				out.print(name + " does exist");
+//				request.setAttribute("alertMsg", "Login Success");
+				
+				System.out.println("LOGIN SUCCESS for " + name);
+				response.sendRedirect("user-list.jsp");
+		}
+		else {
+				out.print(name + " does not exist");
+//				JOptionPane.showMessageDialog(null, "User does not exist");
+//				request.setAttribute("alertMsg", "Login failed");
+				System.out.println("Login failed for " + name);
+				response.sendRedirect("userLogin.jsp");
+	}
+		}
 		
-		if (request.getParameter("Add")!=null) 
-		{
-			//insertUser(request, response);
+		if (request.getParameter("LogOut") != null) {
+			// insertUser(request, response);
+
+//			JOptionPane.showMessageDialog(null, "User has logged out");
+
+//			HttpSession session = request.getSession();
+//			session.removeAttribute("uname");
+//			session.invalidate();
+			
+			Cookie cookie[]=request.getCookies();  
+			for(Cookie c : cookie){  
+			 out.print(" "+c.getName()+" "+c.getValue());//printing name and value of cookie  
+			}  
+//			out.print(name + " does not exist");
+			
+			Cookie cookie1 = new Cookie("uname", "");
+			cookie1.setMaxAge(0);
+	        response.addCookie(cookie1);
+			response.sendRedirect("userLogin.jsp");
+		}
+		
+		if (request.getParameter("Add") != null) {
+			// insertUser(request, response);
 			response.sendRedirect("user-form.jsp");
-		}
-		else if(request.getParameter("Add User")!=null) 
-		{
+		} else if (request.getParameter("Add User") != null) {
 			insertUser(request, response);
-		}
-		else if (request.getParameter("Delete")!=null) 
-		{
+		} else if (request.getParameter("Delete") != null) {
 			response.sendRedirect("delUser.jsp");
-		}
-		else if (request.getParameter("Delete User")!=null) 
-		{
+		} else if (request.getParameter("Delete User") != null) {
 			deleteUser(request, response);
 		}
-		else if(request.getParameter("List All Users")!=null) 
-		{
+		  else if (request.getParameter("Update") != null) {
+			response.sendRedirect("updateUser.jsp");
+		} else if (request.getParameter("Update User") != null) {
+			updateUser(request, response);
+		} else if (request.getParameter("List All Users") != null) {
 			listUser(request, response);
-			
 		}
-		
-//		
+	
 //		String name = request.getParameter("Name");
 //		String password = request.getParameter("Password");
 
-      //listUser(request, response);
-		}
-		
+		// listUser(request, response);
+	}
 //		private void test(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 //		// TODO Auto-generated method stub
 //			response.getWriter().println("Working"); //  custom string
@@ -98,56 +147,158 @@ public class UsersServlet extends HttpServlet {
 //			dispatcher.forward(request, response);
 //		}
 
-		private void insertUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			String name = request.getParameter("name");
-			String password = request.getParameter("password");
-			
-			UserDao.insert(name, password);
-			response.sendRedirect("user-list.jsp");
+	private boolean validateUser(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+		return UserDao.userDoesExist(name, password);
+
+	}
 	
-		} 
+
+	private void insertUser(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		
-		private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			String name = request.getParameter("name");
-			String password = request.getParameter("password");
-			
-//			User delUser = new User(name);
-			try {
-				UserDao.remove(name, password);
-			} catch (Exception e) {
-				e.printStackTrace();
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+		
+		request.getSession();
+		response.getWriter();
+		
+		String username="";
+		
+		Cookie cookie[]=request.getCookies();  
+		for(Cookie c : cookie){  
+			if (c.getName().equals("uname") ) {
+				
+				username=c.getValue();
+				System.out.println( "User added by "+ username );
+				
+				if (username.equals("admin"))
+				UserDao.insert(name, password);
+				else {
+					
+					System.out.println("Only admin can add users");
+				}
+
 			}
-			System.out.println("DELETE SUCCESS for " + name);
-			response.sendRedirect("user-list.jsp");
-		}
+		}  
 		
-		private void listUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		System.out.println( "New user added by "+ session.getAttribute("uname").toString() );
+//		JOptionPane.showMessageDialog(null, "" + name +" added successfully");
+//		out.print("New user added by "+ session.getAttribute("uname").toString());
+		
+		response.sendRedirect("user-list.jsp");
+	}
+
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		request.getSession();
+		response.getWriter();
+
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+
+		String username="";
+		String pass="";
+		
+		Cookie cookie[]=request.getCookies();  
+		Cookie cookiepass[] = request.getCookies();
+		for(Cookie c : cookie){  
+			for(Cookie c1 : cookiepass) {
+				if ((c.getName().equals("uname")) && (c1.getName().equals("upass") ) ) {
+									
+				username=c.getValue();
+				pass=c1.getValue();
+				
 			
-			try {
-				List<User> listUser = UserDao.retrieveAll();
-				request.setAttribute("listUser", listUser);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
-				dispatcher.forward(request, response);
-			}catch (Exception e) {
-				e.printStackTrace();
+				if ( (validateUser(request,response)) && ( (username.equals(name) && (pass.equals(password)) ) || (username.equals("admin")) ) )  {
+					try {
+						
+						UserDao.remove(name, password);
+						System.out.println( "User deleted by "+ username );
+						break;
+				    	} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				else {
+					System.out.println("Only " + username + " and ADMIN can delete this record OR "+ name+ " does not exist.");
+				}
 			}
-		}
+		}  
+	}	
+//		try {
+//			UserDao.remove(name, password);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		String username="";
+//		
+//		Cookie cookie[]=request.getCookies();  
+//		for(Cookie c : cookie){  
+//			if (c.getName().equals("uname") ) {
+//				
+//				username=c.getValue();
+//				System.out.println( "User deleted by "+ username);
+//
+//			}
+//		}  
+
 		
-		private void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			String name = request.getParameter("name");
-			String password = request.getParameter("password");
-			
-//			User delUser = new User(name);
-			try {
-				UserDao.updatePassword(name, password);
-			} catch (Exception e) {
-				e.printStackTrace();
+//		System.out.println( "User deleted by "+ session.getAttribute("uname").toString() );
+//		JOptionPane.showMessageDialog(null, "" + name +" removed successfully");
+		response.sendRedirect("user-list.jsp");
+	}
+
+	private void listUser(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		try {
+			List<User> listUser = UserDao.retrieveAll();
+			request.setAttribute("listUser", listUser);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+			dispatcher.forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void updateUser(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+			 
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+		
+		String username="";
+//		String pass="";
+		
+		Cookie cookie[]=request.getCookies();  
+		Cookie cookiepass[] = request.getCookies();
+		for(Cookie c : cookie){  
+			for(Cookie c1 : cookiepass) {
+				if ((c.getName().equals("uname")) && (c1.getName().equals("upass") ) ) {
+									
+				username=c.getValue();
+//				pass=c1.getValue();
+				
+				if (username.equals(name)) {
+					try {
+						UserDao.updatePassword(name, password);
+						System.out.println( "User updated by "+ username + " with session ID : " + c.getName().equals("JSESSIONID") );
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
-			System.out.println("UPDATE SUCCESS for " + name);
-			response.sendRedirect("user-list.jsp");
-		}
-		
+		}  
+	}	
+//		JOptionPane.showMessageDialog(null, "" + name +" updated successfully");
+		response.sendRedirect("user-list.jsp");
+	}
+
 }
