@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -14,7 +15,7 @@ public class EmployeeResource {
 	EmployeeDao db = new EmployeeDao();
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON )
+	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
 	public List<Employee> getEmployee() {
 		
 		System.out.println("Method Working..");
@@ -22,12 +23,39 @@ public class EmployeeResource {
 		return db.getEmployees() ;
 	}
 	
+	@GET
+	@Path("emp/{id}")
+	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
+	public Employee getOneEmployee(@PathParam("id") int id) {
+						
+		return db.getEmployee(id) ;
+	}
+	
 	@POST
 	@Path("emp")
+	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
 	public Employee createEmployee(Employee e) {
 		System.out.println(e);
 		db.create(e);
 		
 		return e;
 	}
+	
+	@GET
+	@Path("connect")
+	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
+	public String getConnection() {
+		db.connect();
+		return "Connected";
+		
+	}
+	
+//	@POST
+//	@Path("insert")
+//	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
+//	public Employee insertEmployee( String name, int id) {
+//		EmployeeDao.insert(name,id);
+//		return getOneEmployee(id) ;
+//		
+//	}
 }
