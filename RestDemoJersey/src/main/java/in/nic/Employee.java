@@ -6,12 +6,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Employee {
 	
 	private String name;
-	private int empNo;
+	private int id;
 	
-	public Employee(String name, int empNo) {
+	public Employee(String name, int id) {
 		// TODO Auto-generated constructor stub
 		this.name =name;
-		this.empNo = empNo;
+		this.id = id;
 	}
 	public Employee() {
 		// TODO Auto-generated constructor stub
@@ -22,15 +22,15 @@ public class Employee {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getEmpNo() {
-		return empNo;
+	public int getid() {
+		return id;
 	}
-	public void setEmpNo(int empNo) {
-		this.empNo = empNo;
+	public void setid(int id) {
+		this.id = id;
 	}
 	@Override
 	public String toString() {
-		return "Employee [name=" + name + ", empNo=" + empNo + "]";
+		return "Employee [name=" + name + ", id=" + id + "]";
 	}
 	
 	

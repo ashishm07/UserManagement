@@ -14,46 +14,65 @@ import com.mongodb.DBObject;
 
 public class EmployeeDao{
 	
-	List<Employee> empList = new ArrayList() ;
+	static List<Employee> EmployeeList = new ArrayList<Employee>();
 	
 	public EmployeeDao() {
 		
-		Employee emp1 = new Employee();
-		emp1.setName("Ashish");
-		emp1.setEmpNo(1);
-		
-		Employee emp2 = new Employee();
-		emp2.setName("Sherlock");
-		emp2.setEmpNo(2);
-		
-		empList.add(emp1);
-		empList.add(emp2);
+		System.out.println("---");
 		
 	}
 	public List<Employee> getEmployees(){
-			return empList; 
+			return retrieveAll(); 
 	}
 		
 	public Employee getEmployee(int eNumber) {
 			
-			for (Employee e1 : empList) {
-				if (e1.getEmpNo()==eNumber) {
-					return e1;
-				}
+
+		MongoClient mongoClient = new MongoClient("localhost", 27017);
+		System.out.println("Server Connection successfully established through retrieve all.");
+		DB dbs = mongoClient.getDB("newdb");
+
+		DBCollection col = dbs.getCollection("Employee");
+ 		Cursor cursor = col.find();
+
+		List<Employee> EmployeeList = new ArrayList<Employee>();
+
+		while (cursor.hasNext()) {
+
+			DBObject obj = cursor.next();
+			Employee emp1 = new Employee(obj.get("name").toString(), Integer.parseInt(obj.get("id").toString()) );
+			
+			if (eNumber== Integer.parseInt( obj.get("id").toString()))
+			{
+				return emp1;
+			}
+			
+			EmployeeList.add(emp1);
 		}
-			return new Employee();
+		mongoClient.close();
+
+		return new Employee();
+
 	}
 	
-	public void create(Employee e) {
-		// TODO Auto-generated method stub
-		empList.add(e);
+	public static void create(Employee[] e) {
+		try {
+			
+			for (Employee e1 : e) {
+			String name = e1.getName();
+			int id = e1.getid();
+			
+			insert(name, id);
+			}
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
-		public void connect() {
+	public void connect() {
 		// Establishing  with server
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 		System.out.println("Server Connection successfully established");
-		
-
 		
 		// Connecting with database. Creates the database if it doesn't exist.
 		DB dbs = mongoClient.getDB( "newdb" );
@@ -66,16 +85,15 @@ public class EmployeeDao{
 
 		Cursor cursor = col.find();
 
-		BasicDBObject doc = new BasicDBObject();
-
-		doc.put("name", "Sherlock");
-		doc.put("id", 221);
-
-		col.insert(doc);
-		System.out.println("Document Inserted");
-
+//		BasicDBObject doc = new BasicDBObject();
+//
+//		doc.put("name", "Mycroft");
+//		doc.put("id", 222);
+//
+//		col.insert(doc);
+//		System.out.println("Document Inserted");
 		
-		List<Employee> EmployeeList = new ArrayList<Employee>();
+//		List<Employee> EmployeeList = new ArrayList<Employee>();
 
 		
 		while (cursor.hasNext()) {
@@ -84,7 +102,7 @@ public class EmployeeDao{
 			//Employee u1 = new Employee(obj.get("name").toString(), Integer.parseInt(obj.get("id").toString()) );
 			//System.out.println(obj.get("name") + " - " + obj.get("id"));
 			//EmployeeList.add(u1);
-			System.out.println(obj.get("name"));
+			System.out.println("Name : " + obj.get("name") + " ID :" +obj.get("id") );
 		}
 
 		mongoClient.close();
@@ -94,7 +112,7 @@ public class EmployeeDao{
 	public static boolean EmployeeDoesExist(String name, int id) {
 
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
-		DB dbs = mongoClient.getDB("mydb");
+		DB dbs = mongoClient.getDB("newdb");
 
 		System.out.println("Connection to DB successful");
 		
@@ -109,8 +127,8 @@ public class EmployeeDao{
 		while (cursor.hasNext()) {
 
 			DBObject obj = cursor.next();
-			Employee u1 = new Employee(obj.get("name").toString(), Integer.parseInt(obj.get("id").toString()) );
-			if ((newEmployee.getName().equals(u1.getName())) && (newEmployee.getEmpNo()==(u1.getEmpNo()))) {
+			Employee u1 = new Employee(obj.get("name").toString(), (int)Float.parseFloat(obj.get("id").toString()) );
+			if ((newEmployee.getName().equals(u1.getName())) && (newEmployee.getid()==(u1.getid()))) {
 				System.out.println("Employee exists");
 				EmployeeExists = true;
 				break;
@@ -124,7 +142,7 @@ public class EmployeeDao{
 	// Inserting a document in a collection
 	public static void insert(String name, int id) {
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
-		DB dbs = mongoClient.getDB("mydb");
+		DB dbs = mongoClient.getDB("newdb");
 
 		DBCollection col = dbs.getCollection("Employee");
 
@@ -141,15 +159,14 @@ public class EmployeeDao{
 		}
 		
 		mongoClient.close();
-
 	}
-//
+
 	// Read Operation. Create a cursor object to pass through each document
 	public static List<Employee> retrieveAll() {
 
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 		System.out.println("Server Connection successfully established through retrieve all.");
-		DB dbs = mongoClient.getDB("mydb");
+		DB dbs = mongoClient.getDB("newdb");
 
 		DBCollection col = dbs.getCollection("Employee");
 		// MongoCollection<Document> col = (MongoCollection<Document>)
@@ -158,7 +175,6 @@ public class EmployeeDao{
 
 		Cursor cursor = col.find();
 
-		List<Employee> EmployeeList = new ArrayList<Employee>();
 
 		while (cursor.hasNext()) {
 
@@ -170,16 +186,21 @@ public class EmployeeDao{
 
 		mongoClient.close();
 
+//		for (Employee e: EmployeeList) {
+//			
+//			System.out.println(e + " employee ");
+//		}
+//		
 		return EmployeeList;		
 	}
 
 	// Updating id for a Employee in a document. Create the updated Document object
 	
-	public static void updateid(String name, int id) {
+	public static void updateId(String name, int id) {
 
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 
-		DB dbs = mongoClient.getDB("mydb");
+		DB dbs = mongoClient.getDB("newdb");
 
 		DBCollection col = dbs.getCollection("Employee");
 
@@ -203,7 +224,6 @@ public class EmployeeDao{
 				col.update(oldDocument, updatedDocument, false, false);
 				System.out.println(
 						"Document updated:: From - " + oldDocument.toString() + " To -" + updatedDocument.toString());
-			
 			}
 		}
 		mongoClient.close();
@@ -215,7 +235,7 @@ public class EmployeeDao{
 
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 
-		DB dbs = mongoClient.getDB("mydb");
+		DB dbs = mongoClient.getDB("newdb");
 
 		DBCollection col = dbs.getCollection("Employee");
 

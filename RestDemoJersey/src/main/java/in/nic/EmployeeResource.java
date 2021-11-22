@@ -2,6 +2,7 @@ package in.nic;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,7 +20,6 @@ public class EmployeeResource {
 	public List<Employee> getEmployee() {
 		
 		System.out.println("Method Working..");
-				
 		return db.getEmployees() ;
 	}
 	
@@ -27,18 +27,16 @@ public class EmployeeResource {
 	@Path("emp/{id}")
 	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
 	public Employee getOneEmployee(@PathParam("id") int id) {
-						
 		return db.getEmployee(id) ;
 	}
 	
 	@POST
 	@Path("emp")
 	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
-	public Employee createEmployee(Employee e) {
+	public Employee createEmployee(Employee[] e) {
 		System.out.println(e);
 		db.create(e);
-		
-		return e;
+		return e[e.length - 1 ];
 	}
 	
 	@GET
@@ -46,16 +44,27 @@ public class EmployeeResource {
 	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
 	public String getConnection() {
 		db.connect();
-		return "Connected";
+		return "Connected";	
+	}
+	
+	@POST
+	@Path("insert/{name}/{id}")
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON })
+	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
+	public Employee insertEmployee( @PathParam("name") String name, @PathParam("id") int id) {
+		EmployeeDao.insert(name,id);
+		return getOneEmployee(id) ;
 		
 	}
 	
 //	@POST
-//	@Path("insert")
+//	@Path("insertMany/{name}/{id}")
+//	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON })
 //	@Produces({MediaType.APPLICATION_XML , MediaType.APPLICATION_JSON} )
-//	public Employee insertEmployee( String name, int id) {
-//		EmployeeDao.insert(name,id);
-//		return getOneEmployee(id) ;
+//	public Employee insertMultipleEmployee( Employee e) {
+//		EmployeeDao.create(e);
+//		return getOneEmployee(e) ;
 //		
 //	}
+	
 }
