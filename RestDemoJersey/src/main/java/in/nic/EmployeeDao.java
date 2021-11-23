@@ -175,6 +175,8 @@ public class EmployeeDao{
 
 		Cursor cursor = col.find();
 
+		List<Employee> EmployeeList = new ArrayList<Employee>();
+
 
 		while (cursor.hasNext()) {
 
@@ -183,20 +185,18 @@ public class EmployeeDao{
 			System.out.println(obj.get("name") + " - " + obj.get("id"));
 			EmployeeList.add(u1);
 		}
-
 		mongoClient.close();
-
 //		for (Employee e: EmployeeList) {
 //			
 //			System.out.println(e + " employee ");
 //		}
-//		
+
 		return EmployeeList;		
 	}
 
 	// Updating id for a Employee in a document. Create the updated Document object
 	
-	public static void updateId(String name, int id) {
+	public static void updateId(Employee[] e) {
 
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 
@@ -205,6 +205,9 @@ public class EmployeeDao{
 		DBCollection col = dbs.getCollection("Employee");
 
 		col.find();
+		for (Employee e1 : e) {
+			String name = e1.getName();
+			int id = e1.getid();
 
 		if (EmployeeDoesExist(name, id)) {
 			System.out.println("Employee \"" + name + "\" already exists.");
@@ -226,12 +229,13 @@ public class EmployeeDao{
 						"Document updated:: From - " + oldDocument.toString() + " To -" + updatedDocument.toString());
 			}
 		}
+		}
 		mongoClient.close();
 
 	}
 
 	// Document deletion
-	public static void remove(String name, int id) {
+	public static void remove(Employee[] e) {
 
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 
@@ -239,12 +243,16 @@ public class EmployeeDao{
 
 		DBCollection col = dbs.getCollection("Employee");
 
+		for (Employee e1 : e) {
+			String name = e1.getName();
+			int id = e1.getid();
 		BasicDBObject document = new BasicDBObject();
 		document.put("name", name);
 		document.put("id", id);
 		col.remove(document);
 		System.out.println("Document Deleted for " + name);
 		
+		}
 		mongoClient.close();
 
 	}
