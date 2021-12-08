@@ -2,7 +2,7 @@
 
 window.onload = function() {
 
-    let startWatchBtn = document.getElementById('startWatchBtn');
+let startWatchBtn = document.getElementById('startWatchBtn');
 startWatchBtn.addEventListener('click',startWatching);
 
 let stopWatchBtn = document.getElementById('stopWatchBtn');
@@ -29,8 +29,22 @@ function startWatching(){
     
 }
 
-function stopWatching (watchId) {
+function stopWatching () {
 
+    const successCallback = (position) => {
+        console.log(position);
+    };
+    
+    const errorCallback = (error) => {
+        console.error(error);
+    };
+
+    
+    // Asks user for his/her current location
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback); 
+
+    //Updates watchId as the location changes
+    const watchId = navigator.geolocation.watchPosition(successCallback,errorCallback);
 
     console.log("User location is not being monitored");
     

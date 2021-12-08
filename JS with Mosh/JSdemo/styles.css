@@ -1,0 +1,25 @@
+.button_css
+{
+	background-color: rgb(9, 199, 247);
+    border: none;
+    border-radius: 8px;
+	/* width: 75px;
+	height: 30px; */
+    word-wrap:break-word;
+    font-size: 20px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
+    color: rgb(2, 2, 2);
+}
+
+.button_css:hover
+{
+	background-color: rgb(78, 245, 56);
+    border: none;
+    border-radius: 8px;
+	/* width: 75px;
+	height: 30px; */
+    word-wrap:break-word;
+    font-size: 20px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
+    color: rgb(2, 2, 2);
+}
