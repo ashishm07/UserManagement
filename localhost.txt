@@ -1,0 +1,17 @@
+http://oauthclient.dev.nic.in:8081/OauthClient/xsToken  ===  2nd API
+ 
+http://oauthclient.dev.nic.in:8081/OauthClient/            ===  1st API
+
+http://janparichay.dev.nic.in/OSC
+
+
+
+10.1.161.37	janparichay.dev.nic.in
+164.100.128.243 serviceonline.gov.in
+10.122.34.74 amqp.dc.nkn.in
+164.100.14.58   auth.nic.in
+10.122.34.117   backend-auth.staging.nic.in
+164.100.14.211  smsgw.sms.gov.in
+10.1.161.37 oauthclient.dev.nic.in
+
+

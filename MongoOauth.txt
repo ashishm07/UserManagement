@@ -1,0 +1,64 @@
+db.janParichayServices.insert({
+       
+        "serviceId" : "OauthTest",
+        "ssoType" : "Oauth",
+        "clientSecret" : "SecretforClient",
+        "logo" : "pngFile",
+        "packageName" : "mobilePackageName",
+        "SHA1" : "AndroidSHA",
+        "rsaPublicKey" : "rsaPublicSecretKey",
+        "rsaPrivateKey" : "rsaPublicSecretKey",
+        "applicationType" : "web",
+        "authKey" : "ldreYiKaan33QNPjjNiA819dfqARwLwO",
+        "createdOn" : "2021-10-22 16:41:50 IST",
+        "description" : "An Application to test Oauth SSO service with janParichay as an Identity Provider",
+        "displayName" : "OAuth Client Test",
+        "enforceMultiFactor" : NumberInt(0),
+        "forceMultiFactor" : NumberInt(0), 
+        "homeUrl" : "http://oauthclient.dev.nic.in:8081/OauthClient/home", 
+        "loginType" : NumberInt(0), 
+        "loginUrl" : "http://oauthclient.dev.nic.in:8081/OauthClient",
+        "logoutUrl" : "http://oauthclient.dev.nic.in:8081/OauthClient/home",
+        "serviceCategory" : "Oauth SSO",
+        "serviceName" : "Oauth Client Test", 
+        "serviceState" : "Delhi",
+        "serviceOwnerName" : "Prashant Sharma",
+        "serviceOwnerMobileNo" : "9446513525",
+        "serviceOwnerEmailId" : "off15.del@nkn.in",
+        "updatedOn" : "2021-10-22 16:41:50 IST",
+        "verificationTypes" : {  
+                "mobile" : NumberInt(0),
+				"email": NumberInt(0),
+				"profilePic": NumberInt(0)
+        } 
+
+})
+
+
+db.janParichayServices.remove({})
+
+
+
+
+{
+
+
+        "applicationType" : "",
+        "refreshToken" : "",
+        "accessToken" : "",
+
+        "createdOn" : "19-11-2020 10:11:18",
+        "ip" : "10.162.5.42",
+        "ipArray" : [
+                "10.162.5.42"
+        ],
+        "loginId" : "",
+        "loginType" : "UserId",
+        "parichayId" : "DXSRUl9XPTay3sNPywp2pqZVT1M5An1r",
+        "serviceId" : "sadj",
+        "sessionStartTime" : "19-11-2020 10:11:18",
+        "sessionStatus" : "Logged Out",
+        "updatedOn" : "19-11-2020 10:20:30",
+        "userId" : "gayathri-saj@janparichay.nic.in"
+}
+
